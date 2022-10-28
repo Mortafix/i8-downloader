@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="i8_downloader",
-    version="0.1.1",
+    version="0.1.3",
     author="Moris Doratiotto",
     author_email="moris.doratiotto@gmail.com",
     description="A python module to download icons from icons8.com",

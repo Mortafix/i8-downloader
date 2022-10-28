@@ -1,5 +1,5 @@
 from math import log
-from os import mkdir, path
+from os import path
 from re import search
 from sys import argv
 
@@ -11,6 +11,7 @@ from tqdm import tqdm
 # ---- BASE
 
 BASE_IMAGE_URL = "https://img.icons8.com"
+BASE_FOLDER = "."
 BASE_PACKAGE = "stickers"
 BASE_SIZE = "1024"
 BASE_COLOR = "000000"
@@ -51,6 +52,12 @@ def is_valid_icon_response(response):
         return True
 
 
+def is_valid_path(folder_path):
+    if folder_path == "":
+        return True
+    return path.exists(folder_path)
+
+
 # ---- SCRIPT
 
 
@@ -62,6 +69,18 @@ def main():
         package, size, color, _ = res
 
     if not res:
+        # folder
+        folder_base = f"[@bold]Folder [/@][[@underline]{BASE_FOLDER}[/@]][@bold]: [/@]"
+        folder = (
+            strict_input(
+                paint(folder_base),
+                wrong_text=paint(f"[#red]Path isn't exists![/] {folder_base}"),
+                check=is_valid_path,
+                flush=True,
+            )
+            or BASE_FOLDER
+        )
+
         # package
         package_base = (
             f"[@bold]Package name [/@][[@underline]{BASE_PACKAGE}[/@]][@bold]: [/@]"
@@ -100,14 +119,11 @@ def main():
         f"\nDownloading [#blue]{', '.join(icons)}[/] from [#blue]{package}[/] package "
         f"in [#blue]{size}px[/] and [#blue]#{color}[/].."
     )
-    base_path = path.join(".", f"{package}_{size}_{color}")
-    if not path.exists(base_path):
-        mkdir(base_path)
     for icon in tqdm(icons):
-        file_path = path.join(base_path, f"{icon}.png")
+        file_path = path.join(folder, f"{icon}.png")
         if path.exists(file_path):
             continue
-        response = get(path.join(BASE_IMAGE_URL, package, size, color, f"{icon}.png"))
+        response = get(f"{BASE_IMAGE_URL}/{package}/{size}/{color}/{icon}.png")
         if not is_valid_icon_response(response):
             continue
         open(file_path, "wb+").write(response.content)
