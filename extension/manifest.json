@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Icons8 Quick Download",
+  "description": "Adds a one-click PNG download button to Icons8 icon pages.",
+  "version": "0.1.2",
+  "permissions": [
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://img.icons8.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://icons8.com/*"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
